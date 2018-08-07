@@ -19,6 +19,16 @@
 
 package com.mpush.client.push;
 
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mpush.api.Constants;
 import com.mpush.api.push.*;
 import com.mpush.api.router.ClientLocation;
@@ -28,15 +38,6 @@ import com.mpush.common.push.GatewayPushResult;
 import com.mpush.common.router.RemoteRouter;
 import com.mpush.tools.Jsons;
 import com.mpush.tools.common.TimeLine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by ohun on 2015/12/30.
@@ -223,6 +224,7 @@ public final class PushRequest extends FutureTask<PushResult> {
     }
 
     private void failure() {
+    	mPushClient.getCachedRemoteRouterManager().invalidateLocalCache(userId);
         submit(Status.failure);
     }
 
